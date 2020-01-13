@@ -1,0 +1,21 @@
+<h1>Rooms CRUD Form</h1>
+<form id="form" action="/room" method="POST">
+    <label for="name">Name</label>
+    <input type="text" name="name" placeholder="Room name" required>
+<br><br>
+    <label for="description">Description</label>
+    <input type="text" name="description" placeholder="Room description" value=""">
+    <!--input id="myPassword" type="password" name="" value=""-->
+<br><br>
+    <label for="imageUrl">Name</label>
+    <input type="url" name="imgUrl" placeholder="Room imageUrl" required>
+<br><br>
+    <label for="review">Review</label>
+    <input type="text" name="review" placeholder="Review comment" required>
+<br><br>
+    <button type="submit">Create Room</button>
+  </form>
+<br>
+  {{#if errorMessage}}
+    <div class="error-message">{{ errorMessage }}</div>
+  {{/if}}
