@@ -1,17 +1,17 @@
-<h1>Rooms Create Form</h1>
-<form id="form" action="/room" method="POST">
+<h1>Edit Room</h1>
+<form id="form" action="/room/{{theRoom._id}}/edit" method="POST">
     <label for="name">Room Name</label>
-    <input type="text" name="name" placeholder="Room name" required>
+    <input type="text" name="name" value="{{theRoom.name}}" required>
 <br><br>
     <label for="description">Description</label>
-    <input type="text" name="description" placeholder="Room description" value="" required>
+    <input type="text" name="description" value="{{theRoom.description}}" required>
     <!--input id="myPassword" type="password" name="" value=""-->
 <br><br>
     <label for="imageUrl">Picture</label>
-    <input type="url" name="imgUrl" placeholder="Room imageUrl">
+    <input type="url" name="imageUrl" value="{{theRoom.imageUrl}}">
 <br><br>
     <label for="review">Review Comment</label>
-    <input type="text" name="review" placeholder="Review comment">
+    <input type="text" name="review" value="{{theRoom.review}}">
 <br><br>
     <button type="submit">Submit</button>
   </form>

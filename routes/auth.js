@@ -82,6 +82,8 @@ router.post("/login", (req, res, next) => {
             if (bcrypt.compareSync(thePassword, userFromDB.password)) {
                 // Save the login in the session!
                 req.session.currentUser = userFromDB;
+                let UserId = req.session.currentUser._id; 
+                console.log(UserId);
                 res.redirect("/");
             } else {
                 res.render("auth/login", {

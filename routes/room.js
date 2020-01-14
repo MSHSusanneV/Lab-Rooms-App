@@ -1,56 +1,115 @@
 const express = require('express');
 const router = express.Router();
+const User = require('../models/user')
+const Room = require('../models/rooms');
 
-const Room = require("../models/user");
+router.use((req, res, next) => {
+    if (req.session.currentUser) { // <== if there's user in the session (user is logged in)
+        next(); // ==> go to the next route ---
+    } else {                          //    |
+        res.redirect("/login");         //    |
+    }                                 //    |
+});
+
+router.get('/rooms-all', (req, res, next) => {
+    Room.find()
+        .then(AllRooms => {
+            res.render('rooms_all', { AllRooms });
+        })
+        .catch(error => {
+            console.log(error);
+        })
+});
+
+/* Edit Room */
+router.get('/room/:id/edit', (req, res, next) => {
+    Room.findById({ '_id': req.params.id })
+        .then(theRoom => {
+            res.render('edit', { theRoom });
+        })
+        .catch(error => { next(error) })
+});
+
+router.post('/room/:id/edit', (req, res, next) => {
+    const { name, description, imageUrl, review } = req.body;
+    Room.updateOne({ '_id': req.params.id }, { $set: { name, description, imageUrl, review } })
+        .then((theRoom) => {
+            res.redirect('/room')
+        })
+        .catch(error => { next(error) }
+        ); 
+        
+});
+
+/* Delete Room */
+router.get('/room/:id/delete', (req, res, next) => {
+    Room.findById({ '_id': req.params.id })
+        .then(theRoom => {
+            res.render('delete', { theRoom });
+        })
+        .catch(error => { next(error) })
+});
+
+router.post('/room/:id/delete', (req, res, next) => {
+    const { name, description, imageUrl, review } = req.body;
+    Room.findByIdAndRemove({ '_id': req.params.id })
+        .then((theRoom) => {
+            res.redirect('/room')
+        })
+        .catch(error => { next(error) }
+        ); 
+        
+});
 
 
-/* Room CRUD */
+/* Rooms Create */
 router.get('/room', (req, res, next) => {
     res.render('room');
 });
 
-// router.post("/room", (req, res, next) => {
-    // console.log("post: /room");
-    const nameRoom = req.body.name;
-    const descriptionRoom = req.body.description;
-    const imgRoom = req.body.imgUrl;
-    
-    if (nameRoom === "" || descriptionRoom === "" || imgRoom === "" ) {
-        res.render("auth/signup", {
-            errorMessage: "Please enter Name / Description / Image!"
-        });
-        return;
-    }
 
-    User.findOne({ "email": email })
-        .then(userFromDB => {
-            if (userFromDB !== null) {
-                res.render("auth/signup", {
-                    errorMessage: "The Email already exists!"
+router.post("/room", (req, res, next) => {
+    // console.log("post: /room");
+    const name = req.body.name;
+    const description = req.body.description;
+    const imageUrl = req.body.imgUrl;
+    const owner = req.session.currentUser;
+    // const reviews = []; //req.body.review;
+
+    console.log(name, description);
+    console.log(req.session.currentUser);
+
+    /* Create Room */
+    Room.findOne({ "name": name })
+        .then(roomFromDB => {
+            if (roomFromDB !== null) {
+                res.render("/room", {
+                    errorMessage: "The Room already exists!"
                 });
                 return;
             }
 
-            User.create({
-                email,
-                password: hashPass,
-                fullName
+            Room.create({
+                name,
+                description,
+                imageUrl,
+                owner
             })
                 .then(() => {
-                  // console.log("User create:");  
-                  res.redirect("/");
+                    console.log("Room create:");
+                    res.redirect("/");
                 })
                 .catch(error => {
                     console.log(error);
                 })
         })
-        .catch(error => {
-            next(error);
-        })
+
 });
 
+
+
 /* Login Page */
-router.get('/login', (req, res, next) => {
+/* router.get('/login', (req, res, next) => {
     res.render('auth/login');
 });
 
@@ -89,6 +148,6 @@ router.post("/login", (req, res, next) => {
         })
 
 
-});
+}); */
 
 module.exports = router;

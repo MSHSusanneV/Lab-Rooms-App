@@ -1,0 +1,7 @@
+<h1>Rooms Overview</h1>
+<ul>
+{{#each AllRooms}}
+   <li> {{this.name}} {{this.description}}  <a href="/room/{{this._id}}/edit">   EDIT <a> <a href="/room/{{this._id}}/delete">   DELETE<a> </a></li>
+   {{/each}}
+</ul>
+<br>

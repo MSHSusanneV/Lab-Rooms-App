@@ -4,7 +4,7 @@ const router = express.Router();
 router.get("/protected", (req, res, next) => {
     res.render("main");
 });
-
+/* 
 router.use((req, res, next) => {
     if (req.session.currentUser) { // <== if there's user in the session (user is logged in)
         next(); // ==> go to the next route ---

@@ -34,7 +34,7 @@ app.use(cookieParser());
 
 app.use(session({
   secret: "basic-auth-secret",
-  cookie: { maxAge: 60000 },
+  cookie: { maxAge: 60000000 },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: 24 * 60 * 60 // 1 day
@@ -64,8 +64,9 @@ const index = require('./routes/index');
 app.use('/', index);
 const auth = require('./routes/auth');
 app.use('/', auth);
-const room = require('./routes/protected');
-app.use('/', require('./routes/protected'));
-app.use('/', require('./routes/room'));
+
+const room = require('./routes/room');
+app.use('/', room);
+
 
 module.exports = app;
